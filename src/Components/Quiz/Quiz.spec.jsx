@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import Quiz from "./Quiz"; // Update the path according to your folder structure
+import Quiz from "./Quiz";
+import { QuizData } from '../../Data/QuizData';
 
-// Mock the Redux store and provide it to the component
 const initialState = {
   quiz: {
     currentQuestion: 0,
@@ -16,7 +16,7 @@ const initialState = {
 const mockStore = {
   getState: () => initialState,
   subscribe: () => {},
-  dispatch: jest.fn(), // Use a Jest mock function
+  dispatch: jest.fn(),
 };
 
 test('Renders the Quiz component and displays the title', () => {
@@ -29,19 +29,6 @@ test('Renders the Quiz component and displays the title', () => {
   expect(screen.getByText('Quiz App')).toBeInTheDocument();
 });
 
-test('Handles "Next" button click and changes the question', () => {
-  render(
-    <Provider store={mockStore}>
-      <Quiz />
-    </Provider>
-  );
-
-  const nextButton = screen.getByRole('button', { name: /Next/i });
-  fireEvent.click(nextButton);
-
-  // Add expectations here for the change in the question, you may need to check the updated Redux state
-});
-
 test('Displays the question and options when showResult is false', () => {
   render(
     <Provider store={mockStore}>
@@ -50,6 +37,11 @@ test('Displays the question and options when showResult is false', () => {
   );
 
   expect(screen.getByTestId('question-txt')).toBeInTheDocument();
-  // Add expectations here for the options and question display
-});
 
+  const currentQuestion = initialState.quiz.currentQuestion;
+  const options = QuizData[currentQuestion].options;
+
+  options.forEach((option) => {
+    expect(screen.getByText(option)).toBeInTheDocument();
+  });
+});

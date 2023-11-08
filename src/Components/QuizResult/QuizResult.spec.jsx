@@ -2,11 +2,15 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import QuizResult from './QuizResult';
-import { createStore } from 'redux'; // Assuming you're using Redux directly
+import { legacy_createStore as createStore } from "redux";
 
-// Define a simple reducer for testing purposes
 const initialState = {
-  // Define your initial state here
+  quiz: {
+    currentQuestion: 0,
+    score: 0,
+    clickedOption: 0,
+    showResult: false,
+  },
 };
 
 const reducer = (state = initialState, action) => {
